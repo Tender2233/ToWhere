@@ -1,0 +1,45 @@
+<div vue-if='xxx'>
+    <div class='data-head' vue-for='xxx'>
+
+    </div>
+    <div class='data-down' vue-for='xxx'>
+
+    </div>
+    或者
+    <zidingyi vue-for='xxx' data-id='?'>  </zidingyi>
+    <div>
+        {this.xxx.data}
+    </div>
+</div>
+
+putdata=()=>{
+    this.xxx.data.push(<zidingyi/>)
+}
+
+class zidingyi extend xxx{
+    Componentdidmounted=()=>{
+        1.拿数据
+        2.创建数组
+        3.
+    }
+
+    show=()=>{
+        if(this.xxx.visibility='visible'){
+            this.xxx.xxx='hidden';
+        }else{
+        this.xxx.xxx='visibly';
+        }
+
+    }
+
+    render(){
+        return (<div>
+        <div class='data-head' vue-if='xxx' onCLick=(()=>this.show)>
+
+            </div>
+            <div class='data-down' vue-if='xxx' visibility={this.xxx.visibility}>
+
+            </div>
+        </div>)
+    }
+}
