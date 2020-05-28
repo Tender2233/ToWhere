@@ -457,39 +457,39 @@
             </div>
           </div>
 <!--哔哩哔哩-->
-          <div v-if="bilibili_xianshi" class="grid-content" @click="show_bilibili">
-            <img src="../assets/logo/bilibili.png" class="logos">
-          </div>
-          <div v-else class="details">
-            <div class="tw-header">
-              <img src="../assets/logo/bilibili.png" class="small_logo">
-              <span class="category">日排行</span>
-            </div>
-            <div class="tw-main">
-              <div class="singles" v-for="item in this.bilibili" :key='item'>
-                <a class="new" v-if="item.rank<4">
-                  <div class="single">
-                    <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
-                  </div>
-                </a>
-                <a class="new" v-else>
-                  <div class="single">
-                    <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
-                  </div>
-                </a>
-              </div>
-            </div>
-            <div class="tw-footer">
-              <a href="https://www.bilibili.com/" class="link">
-                <span>哔哩哔哩</span>
-              </a>
-              <el-button icon="el-icon-arrow-up" mini circle @click="show_bilibili"></el-button>
-            </div>
-          </div>
+<!--          <div v-if="bilibili_xianshi" class="grid-content" @click="show_bilibili">-->
+<!--            <img src="../assets/logo/bilibili.png" class="logos">-->
+<!--          </div>-->
+<!--          <div v-else class="details">-->
+<!--            <div class="tw-header">-->
+<!--              <img src="../assets/logo/bilibili.png" class="small_logo">-->
+<!--              <span class="category">日排行</span>-->
+<!--            </div>-->
+<!--            <div class="tw-main">-->
+<!--              <div class="singles" v-for="item in this.bilibili" :key='item'>-->
+<!--                <a class="new" v-if="item.rank<4">-->
+<!--                  <div class="single">-->
+<!--                    <span class="seq_highlight">{{item.rank}}</span>-->
+<!--                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>-->
+<!--                    <span class="more">{{item.more}}</span>-->
+<!--                  </div>-->
+<!--                </a>-->
+<!--                <a class="new" v-else>-->
+<!--                  <div class="single">-->
+<!--                    <span class="seq">{{item.rank}}</span>-->
+<!--                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>-->
+<!--                    <span class="more">{{item.more}}</span>-->
+<!--                  </div>-->
+<!--                </a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="tw-footer">-->
+<!--              <a href="https://www.bilibili.com/" class="link">-->
+<!--                <span>哔哩哔哩</span>-->
+<!--              </a>-->
+<!--              <el-button icon="el-icon-arrow-up" mini circle @click="show_bilibili"></el-button>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
       <div class="footer-text">小组成员：王旭东，滕达，王逸康</div>
