@@ -32,8 +32,10 @@
           class = "time-select"
           v-model="cur_time"
           type="datetime"
+          @change="get_time"
           format = "yyyy-MM-dd HH:mm:ss"
           value-format = "yyyy-MM-dd HH:mm:ss"
+          value-changed=""
           placeholder="选择日期时间"
           align="right"
           :picker-options="pickerOptions">
@@ -681,6 +683,20 @@ export default {
         this.$message.success('搜索成功，正在跳转')
         this.$router.push('/')
       }
+    },
+    get_time () {
+      this.baidu_xianshi = true
+      this.weibo_xianshi = true
+      this.zhihu_xianshi = true
+      this.wangyi_xianshi = true
+      this.qdaily_xianshi = true
+      this.toutiao_xianshi = true
+      this.guokr_xianshi = true
+      this.kr36_xianshi = true
+      this.yc_xianshi = true
+      this.pengpai_xianshi = true
+      this.pearvideo_xianshi = true
+      this.bilibili_xianshi = true
     },
     show_zonghe () {
       if (this.zonghe_data === '展开分类') {
