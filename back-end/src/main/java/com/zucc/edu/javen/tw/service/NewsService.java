@@ -1,8 +1,9 @@
 package com.zucc.edu.javen.tw.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zucc.edu.javen.tw.anno.GetLnquire;
+import com.zucc.edu.javen.tw.entity.MediaEntity;
 import com.zucc.edu.javen.tw.entity.RankWeibo;
+import com.zucc.edu.javen.tw.frame.BuildSession;
 import com.zucc.edu.javen.tw.service.impl.NewsServiceImpl;
 import com.zucc.edu.javen.tw.util.DaoUtil;
 import com.zucc.edu.javen.tw.util.MyBatiesUtil;
@@ -52,70 +53,77 @@ public class NewsService implements NewsServiceImpl {
 
     @Override
     public JSONObject getAllNewsList(String name) {
-        SqlSession session = MyBatiesUtil.getSession();
         JSONObject jsonObject = new JSONObject();
-//        GetLnquire.getUrl(name);
-        String daoName = DaoUtil.getDaoName(name);
-        List<Object> entities = session.selectList(daoName);
-        List<JSONObject> jsonObjects = new ArrayList<JSONObject>();
         List<JSONObject> list = null;
-        List<JSONObject> last = null;
-        for(Object o:entities){
-            JSONObject js = (JSONObject) JSONObject.toJSON(o);
-            String url = js.getString("url");
-            js.remove("url");
-            js.put("url","https://www.anyknew.com/go/"+url);
-            js.remove("id");
-            js.remove("getdate");
-            js.remove("adddate");
-            jsonObjects.add(js);
-        }
-        for(int i=0;i<jsonObjects.size();i++){
-            if(jsonObjects.get(i).getInteger("rank")==1){
-                list = jsonObjects.subList(0,i+1);
-                last = jsonObjects.subList(i+1,i*2+1);
-                break;
-            }
-        }
-        for(JSONObject listjs:list){
-            boolean flag = true;
-            for(JSONObject lastjs:last){
-                if(listjs.get("title").equals(lastjs.get("title"))){
-                    flag = false;
+        List<MediaEntity> mediaEntities = BuildSession.getMedias(name);
+        for(MediaEntity media:mediaEntities){
+            List<JSONObject> jsonObjects = BuildSession.getList(media);
+            Set<String> titleSet = new HashSet<String>();
+            int i;
+            for(i=0;i<jsonObjects.size();i++){
+                if(jsonObjects.get(i).getInteger("rank")==1){
+                    list = jsonObjects.subList(0,i+1);
                     break;
                 }
             }
-            listjs.put("new_tag",flag);
+            for(int j=i+1;j<jsonObjects.size();j++){
+                if(j!=i+1&&jsonObjects.get(j-1).getInteger("rank")==1){
+                    break;
+                }
+                titleSet.add(jsonObjects.get(j).getString("title"));
+            }
+            for(JSONObject listjs:list){
+                if(titleSet.contains(listjs.getString("title"))){
+                    listjs.put("new_tag",false);
+                }
+                else{
+                    listjs.put("new_tag",true);
+                }
+
+            }
+            Collections.sort(list,(a, b) -> Integer.compare(a.getInteger("rank"),b.getInteger("rank")));
+            if(mediaEntities.size()==1){
+                jsonObject.put("num",list.size());
+                jsonObject.put("data",list);
+            }
+            else{
+                JSONObject js = new JSONObject();
+                js.put("num",list.size());
+                js.put("data",list);
+                String[] returnname = media.getReturnname().split("/");
+                js.put("name",returnname[1]);
+                jsonObject.put(returnname[0],js);
+            }
         }
-        Collections.sort(list,(a, b) -> Integer.compare(a.getInteger("rank"),b.getInteger("rank")));
-        jsonObject.put("num",list.size());
-        jsonObject.put("data",list);
         return jsonObject;
     }
 
     @Override
     public JSONObject getAllHisNewsList(String name, String date){
-        SqlSession session = MyBatiesUtil.getSession();
         JSONObject jsonObject = new JSONObject();
-        String daoname = DaoUtil.getPastDaoName(name);
-//        String datasdf = DaoUtil.getGetDate(date);
-//        List<Object> entities = session.selectList(daoname,datasdf);
-        List<Object> entities = session.selectList(daoname,date);
-        List<JSONObject> list = new ArrayList<JSONObject>();
-        for(Object o:entities){
-            JSONObject js = (JSONObject) JSONObject.toJSON(o);
-            String url = js.getString("url");
-            js.remove("url");
-            js.put("url","https://www.anyknew.com/go/"+url);
-            js.remove("id");
-            js.remove("getdate");
-            js.remove("adddate");
-            list.add(js);
-            if(js.getInteger("rank")==1)break;
+        List<MediaEntity> mediaEntities = BuildSession.getMedias(name);
+        for(MediaEntity media:mediaEntities){
+            List<JSONObject> list = BuildSession.getHisList(media,date);
+            for(int i = 0;i < list.size();i ++){
+                if(list.get(i).getInteger("rank") == 1){
+                    list = list.subList(0,i+1);
+                    break;
+                }
+            }
+            Collections.sort(list,(a, b) -> Integer.compare(a.getInteger("rank"),b.getInteger("rank")));
+            if(mediaEntities.size()==1){
+                jsonObject.put("num",list.size());
+                jsonObject.put("data",list);
+            }
+            else{
+                JSONObject js = new JSONObject();
+                js.put("num",list.size());
+                js.put("data",list);
+                String[] returnname = media.getReturnname().split("/");
+                js.put("name",returnname[1]);
+                jsonObject.put(returnname[0],js);
+            }
         }
-        Collections.sort(list,(a, b) -> Integer.compare(a.getInteger("rank"),b.getInteger("rank")));
-        jsonObject.put("num",list.size());
-        jsonObject.put("data",list);
         return jsonObject;
     }
 

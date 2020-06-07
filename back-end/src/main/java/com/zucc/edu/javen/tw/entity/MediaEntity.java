@@ -2,11 +2,13 @@ package com.zucc.edu.javen.tw.entity;
 
 public class MediaEntity {
 
-    int id;
-    int kindid;
-    String medianame;
-    String tablename;
-    String mediaurl;
+    private int id;
+    private int kindid;
+    private String medianame;
+    private String tablename;
+    private String mediaurl;
+    private int ranknum;
+    private String returnname;
 
     public int getId() {
         return id;
@@ -46,5 +48,21 @@ public class MediaEntity {
 
     public void setMediaurl(String mediaurl) {
         this.mediaurl = mediaurl;
+    }
+
+    public int getRanknum() {
+        return ranknum;
+    }
+
+    public void setRanknum(int ranknum) {
+        this.ranknum = ranknum;
+    }
+
+    public String getReturnname() {
+        return returnname;
+    }
+
+    public void setReturnname(String returnname) {
+        this.returnname = returnname;
     }
 }
