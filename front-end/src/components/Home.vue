@@ -13,13 +13,13 @@
         color: #1989fa;
       }"
       >
-        UP
+        ↑
       </div>
     </el-backtop>
   <el-container class="home-container">
-<!--    头部-->
+<!--头部-->
     <el-header>
-<!--      logo图片-->
+<!--logo图片-->
       <div class="image-header">
         <img src="../assets/anyknew-b.png" alt="" class="logo_pic">
         <span class="wenzi-header">全球领先的热点导航网站</span>
@@ -39,28 +39,32 @@
           :picker-options="pickerOptions">
         </el-date-picker>
       </div>
-<!--      搜索-->
+<!--搜索-->
 <!--      <el-button class="searchButton" type="primary" icon="el-icon-search" @click="getSearch">搜索</el-button>-->
-<!--      退出按钮-->
+<!--退出按钮-->
       <el-button class="logOutButton" type="info" @click="logout">退出</el-button>
     </el-header>
-<!--    主题内容-->
+<!--主题内容-->
     <el-main>
-<!--      综合模块-->
+<!--综合模块-->
       <div class="zonghe">
-<!--        头部-->
+<!--头部-->
         <div class="items_header">
           <span class="big_title">综合</span>
-          <el-button type="primary" v-if="this.zonghe_data==='展开分类'" class="showAll" icon="el-icon-bottom" @click="show_zonghe">{{zonghe_data}}</el-button>
-          <el-button type="primary" v-else class="showAll" icon="el-icon-arrow-up" @click="show_zonghe">{{zonghe_data}}</el-button>
+          <el-button type="primary" v-if="this.zonghe_data==='展开分类'" class="showAll" icon="el-icon-arrow-down" @click="show_zonghe" plain>{{zonghe_data}}</el-button>
+          <el-button type="primary" v-else class="showAll" icon="el-icon-arrow-up" @click="show_zonghe" plain>{{zonghe_data}}</el-button>
         </div>
-<!--        每行-->
+<!--每行-->
         <div class="items_row">
 <!--百度-->
           <div v-if="baidu_xianshi" class="grid-content" @click="show_baidu">
             <img src="../assets/logo/baidu.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="baidu_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading"
+               >
             <div class="tw-header">
               <img src="../assets/logo/baidu.png" class="small_logo">
               <span class="category">热点</span>
@@ -70,14 +74,16 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
+                    <span class="title" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
                     <span class="more">{{item.more}}</span>
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
+                    <span class="title" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
                     <span class="more">{{item.more}}</span>
                   </div>
                 </a>
@@ -94,7 +100,10 @@
           <div v-if="weibo_xianshi" class="grid-content" @click="show_weibo">
             <img src="../assets/logo/weibo.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="weibo_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
               <img src="../assets/logo/weibo.png" class="small_logo">
               <span class="category">热榜</span>
@@ -104,14 +113,16 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
+                    <span class="title" @click="goPage(item.url)">{{item.title}}
+                      <span v-if="item.new_tag" class="new_tag">新</span></span>
                     <span class="more">{{item.more}}</span>
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
+                    <span class="title" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
                     <span class="more">{{item.more}}</span>
                   </div>
                 </a>
@@ -128,7 +139,10 @@
           <div v-if="zhihu_xianshi" class="grid-content" @click="show_zhihu">
             <img src="../assets/logo/zhihu.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="zhihu_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
               <img src="../assets/logo/zhihu.png" class="small_logo">
               <span class="category">热榜</span>
@@ -138,15 +152,17 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
               </div>
@@ -164,7 +180,10 @@
         <div v-if="wangyi_xianshi" class="grid-content" @click="show_wangyi">
           <img src="../assets/logo/wangyi.png" class="logos">
         </div>
-        <div v-else class="details">
+        <div v-else class="details"
+             v-loading="wangyi_loading"
+             element-loading-text="拼命加载中"
+             element-loading-spinner="el-icon-loading">
           <div class="tw-header">
             <img src="../assets/logo/wangyi.png" class="small_logo">
             <span class="category">国际</span>
@@ -174,15 +193,17 @@
               <a class="new" v-if="item.rank<4">
                 <div class="single">
                   <span class="seq_highlight">{{item.rank}}</span>
-                  <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                  <span class="more">{{item.more}}</span>
+                  <span class="title1" @click="goPage(item.url)">{{item.title}}
+                  <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                  <span class="more">{{item.more}}</span>-->
                 </div>
               </a>
               <a class="new" v-else>
                 <div class="single">
                   <span class="seq">{{item.rank}}</span>
-                  <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                  <span class="more">{{item.more}}</span>
+                  <span class="title1" @click="goPage(item.url)">{{item.title}}
+                  <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                  <span class="more">{{item.more}}</span>-->
                 </div>
               </a>
             </div>
@@ -198,7 +219,10 @@
       <div v-if="qdaily_xianshi" class="grid-content" @click="show_qdaily">
         <img src="../assets/logo/qdaily.png" class="logos">
       </div>
-      <div v-else class="details">
+      <div v-else class="details"
+           v-loading="qdaily_loading"
+           element-loading-text="拼命加载中"
+           element-loading-spinner="el-icon-loading">
         <div class="tw-header">
           <img src="../assets/logo/qdaily.png" class="small_logo">
           <span class="category">Top50</span>
@@ -208,15 +232,17 @@
             <a class="new" v-if="item.rank<4">
               <div class="single">
                 <span class="seq_highlight">{{item.rank}}</span>
-                <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                <span class="more">{{item.more}}</span>
+                <span class="title1" @click="goPage(item.url)">{{item.title}}
+                <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                <span class="more">{{item.more}}</span>-->
               </div>
             </a>
             <a class="new" v-else>
               <div class="single">
                 <span class="seq">{{item.rank}}</span>
-                <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                <span class="more">{{item.more}}</span>
+                <span class="title1" @click="goPage(item.url)">{{item.title}}
+                <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                <span class="more">{{item.more}}</span>-->
               </div>
             </a>
           </div>
@@ -232,7 +258,10 @@
       <div v-if="toutiao_xianshi" class="grid-content" @click="show_toutiao">
         <img src="../assets/logo/toutiao.png" class="logos">
       </div>
-      <div v-else class="details">
+      <div v-else class="details"
+           v-loading="toutiao_loading"
+           element-loading-text="拼命加载中"
+           element-loading-spinner="el-icon-loading">
         <div class="tw-header">
           <img src="../assets/logo/toutiao.png" class="small_logo">
           <span class="category">热搜</span>
@@ -242,15 +271,17 @@
             <a class="new" v-if="item.rank<4">
               <div class="single">
                 <span class="seq_highlight">{{item.rank}}</span>
-                <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                <span class="more">{{item.more}}</span>
+                <span class="title1" @click="goPage(item.url)">{{item.title}}
+                <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                <span class="more">{{item.more}}</span>-->
               </div>
             </a>
             <a class="new" v-else>
               <div class="single">
                 <span class="seq">{{item.rank}}</span>
-                <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                <span class="more">{{item.more}}</span>
+                <span class="title1" @click="goPage(item.url)">{{item.title}}
+                <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                <span class="more">{{item.more}}</span>-->
               </div>
             </a>
           </div>
@@ -269,18 +300,21 @@
 <!--头部-->
         <div class="items_header">
           <span class="big_title">科技</span>
-          <el-button type="primary" v-if="this.keji_data==='展开分类'" class="showAll" icon="el-icon-bottom" @click="show_keji">{{keji_data}}</el-button>
-          <el-button type="primary" v-else class="showAll" icon="el-icon-arrow-up" @click="show_keji">{{keji_data}}</el-button>
+          <el-button type="primary" v-if="this.keji_data==='展开分类'" class="showAll" icon="el-icon-arrow-down" @click="show_keji" plain>{{keji_data}}</el-button>
+          <el-button type="primary" v-else class="showAll" icon="el-icon-arrow-up" @click="show_keji" plain>{{keji_data}}</el-button>
         </div>
         <!--        每行-->
         <div class="items_row">
 <!--果壳-->
           <div v-if="guokr_xianshi" class="grid-content" @click="show_guokr">
-            <img src="../assets/logo/guokr.png" class="logos">
+            <img src="../assets/logo/kepuchina.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="kepuchina_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
-              <img src="../assets/logo/guokr.png" class="small_logo">
+              <img src="../assets/logo/kepuchina.png" class="small_logo">
               <span class="category">科学人</span>
             </div>
             <div class="tw-main">
@@ -288,22 +322,24 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
               </div>
             </div>
             <div class="tw-footer">
-              <a href="https://www.guokr.com/" class="link">
-                <span>果壳</span>
+              <a href="https://www.kepuchina.cn/" class="link">
+                <span>科普中国</span>
               </a>
               <el-button icon="el-icon-arrow-up" mini circle @click="show_guokr"></el-button>
             </div>
@@ -312,7 +348,10 @@
           <div v-if="kr36_xianshi" class="grid-content" @click="show_36kr">
             <img src="../assets/logo/36kr.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="kr36_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
               <img src="../assets/logo/36kr.png" class="small_logo">
               <span class="category">24小时热榜</span>
@@ -322,15 +361,17 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
               </div>
@@ -346,7 +387,10 @@
           <div v-if="yc_xianshi" class="grid-content" @click="show_yc">
             <img src="../assets/logo/yc.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="yc_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
               <img src="../assets/logo/yc.png" class="small_logo">
               <span class="category">hacker news</span>
@@ -356,15 +400,17 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
               </div>
@@ -382,9 +428,9 @@
       <div class="shipin">
         <!--        头部-->
         <div class="items_header">
-          <span class="big_title">视频</span>
-          <el-button type="primary" v-if="this.shipin_data==='展开分类'" class="showAll" icon="el-icon-bottom" @click="show_shipin">{{shipin_data}}</el-button>
-          <el-button type="primary" v-else class="showAll" icon="el-icon-arrow-up" @click="show_shipin">{{shipin_data}}</el-button>
+          <span class="big_title">其他</span>
+          <el-button type="primary" v-if="this.shipin_data==='展开分类'" class="showAll" icon="el-icon-arrow-down" @click="show_shipin" plain>{{shipin_data}}</el-button>
+          <el-button type="primary" v-else class="showAll" icon="el-icon-arrow-up" @click="show_shipin" plain>{{shipin_data}}</el-button>
         </div>
         <!--        每行-->
         <div class="items_row">
@@ -392,7 +438,10 @@
           <div v-if="pengpai_xianshi" class="grid-content" @click="show_pengpai">
             <img src="../assets/logo/pengpai.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="pengpai_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
               <img src="../assets/logo/pengpai.png" class="small_logo">
               <span class="category">视频</span>
@@ -402,15 +451,17 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
               </div>
@@ -426,7 +477,10 @@
           <div v-if="pearvideo_xianshi" class="grid-content" @click="show_pearvideo">
             <img src="../assets/logo/pearvideo.png" class="logos">
           </div>
-          <div v-else class="details">
+          <div v-else class="details"
+               v-loading="pearvideo_loading"
+               element-loading-text="拼命加载中"
+               element-loading-spinner="el-icon-loading">
             <div class="tw-header">
               <img src="../assets/logo/pearvideo.png" class="small_logo">
               <span class="category">总榜</span>
@@ -436,15 +490,17 @@
                 <a class="new" v-if="item.rank<4">
                   <div class="single">
                     <span class="seq_highlight">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
                 <a class="new" v-else>
                   <div class="single">
                     <span class="seq">{{item.rank}}</span>
-                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
-                    <span class="more">{{item.more}}</span>
+                    <span class="title1" @click="goPage(item.url)">{{item.title}}
+                    <span v-if="item.new_tag" class="new_tag">新</span></span>
+<!--                    <span class="more">{{item.more}}</span>-->
                   </div>
                 </a>
               </div>
@@ -454,6 +510,45 @@
                 <span>梨视频</span>
               </a>
               <el-button icon="el-icon-arrow-up" mini circle @click="show_pearvideo"></el-button>
+            </div>
+          </div>
+<!--填补空缺专用-->
+<!--          <div class="grid-content-hidden"></div>-->
+<!--推荐模块-->
+          <div v-if="bilibili_xianshi" class="grid-content" @click="show_recommend">
+            <img src="../assets/logo/tuijian.png" class="logos">
+          </div>
+          <div v-else class="details"
+               v-loading="tuijian_loading"
+               element-loading-text="真的已经在拼命加载中了QAQ"
+               element-loading-spinner="el-icon-loading">
+            <div class="tw-header">
+              <img src="../assets/logo/tuijian.png" class="small_logo">
+              <span class="category">{{this.tuijian_name}}</span>
+            </div>
+            <div class="tw-main" v-loading="loading">
+              <div class="singles" v-for="item in this.tuijian" :key='item'>
+                <a class="new" v-if="item.id<4">
+                  <div class="single">
+                    <span class="seq_highlight">{{item.id}}</span>
+                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
+                    <span class="more">{{item.from}}</span>
+                  </div>
+                </a>
+                <a class="new" v-else>
+                  <div class="single">
+                    <span class="seq">{{item.id}}</span>
+                    <span class="title" @click="goPage(item.url)">{{item.title}}</span>
+                    <span class="more">{{item.from}}</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="tw-footer">
+              <a href="" class="link">
+                <span>热词推荐</span>
+              </a>
+              <el-button icon="el-icon-arrow-up" mini circle @click="close_recommend"></el-button>
             </div>
           </div>
 <!--哔哩哔哩-->
@@ -494,8 +589,6 @@
       </div>
       <div class="footer-text">小组成员：王旭东，滕达，王逸康</div>
     </el-main>
-<!--    尾部-->
-<!--    <el-footer>小组成员：王旭东，滕达，王逸康</el-footer>-->
   </el-container>
   </div>
 </template>
@@ -556,9 +649,23 @@ export default {
       pearvideo_xianshi: true,
       bilibili: [],
       bilibili_xianshi: true,
+      tuijian_name: '',
+      tuijian: [],
       zonghe_data: '展开分类',
       keji_data: '展开分类',
-      shipin_data: '展开分类'
+      shipin_data: '展开分类',
+      baidu_loading: true,
+      weibo_loading: true,
+      zhihu_loading: true,
+      wangyi_loading: true,
+      qdaily_loading: true,
+      toutiao_loading: true,
+      kepuchina_loading: true,
+      kr36_loading: true,
+      yc_loading: true,
+      pengpai_loading: true,
+      pearvideo_loading: true,
+      tuijian_loading: true
     }
   },
   methods: {
@@ -584,6 +691,12 @@ export default {
         this.wangyi_xianshi = true
         this.qdaily_xianshi = true
         this.toutiao_xianshi = true
+        this.baidu_loading = true
+        this.weibo_loading = true
+        this.zhihu_loading = true
+        this.wangyi_loading = true
+        this.qdaily_loading = true
+        this.toutiao_loading = true
         this.show_baidu()
         this.show_weibo()
         this.show_zhihu()
@@ -612,6 +725,9 @@ export default {
         this.guokr_xianshi = true
         this.kr36_xianshi = true
         this.yc_xianshi = true
+        this.kepuchina_loading = true
+        this.kr36_loading = true
+        this.yc_loading = true
         this.show_guokr()
         this.show_36kr()
         this.show_yc()
@@ -631,9 +747,12 @@ export default {
         this.pengpai_xianshi = true
         this.pearvideo_xianshi = true
         this.bilibili_xianshi = true
+        this.pengpai_loading = true
+        this.pearvideo_loading = true
+        this.tuijian_loading = true
         this.show_pengpai()
         this.show_pearvideo()
-        this.show_bilibili()
+        this.show_recommend()
       } else {
         this.shipin_data = '展开分类'
         // this.pengpai_xianshi = !this.pengpai_xianshi
@@ -645,139 +764,102 @@ export default {
       }
     },
     async show_baidu () {
+      this.baidu_xianshi = !this.baidu_xianshi
       this.timeForm.date = this.cur_time
       console.log(this.timeForm.date)
       const { data: res } = await this.$http.post('zonghe/baidu', this.timeForm)
       this.baidu = res.hot.data
-      this.baidu_xianshi = !this.baidu_xianshi
+      this.baidu_loading = !this.baidu_loading
     },
     async show_weibo () {
+      this.weibo_xianshi = !this.weibo_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('zonghe/weibo', this.timeForm)
       this.weibo = res.data
-      this.weibo_xianshi = !this.weibo_xianshi
+      this.weibo_loading = !this.weibo_loading
     },
     async show_zhihu () {
+      this.zhihu_xianshi = !this.zhihu_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('zonghe/zhihu', this.timeForm)
       this.zhihu = res.hot.data
-      this.zhihu_xianshi = !this.zhihu_xianshi
+      this.zhihu_loading = !this.zhihu_loading
     },
     async show_wangyi () {
+      this.wangyi_xianshi = !this.wangyi_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('zonghe/wangyi', this.timeForm)
       this.wangyi = res.data
-      this.wangyi_xianshi = !this.wangyi_xianshi
+      this.wangyi_loading = !this.wangyi_loading
     },
     async show_qdaily () {
+      this.qdaily_xianshi = !this.qdaily_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('zonghe/qdaily', this.timeForm)
       this.qdaily = res.data
-      this.qdaily_xianshi = !this.qdaily_xianshi
+      this.qdaily_loading = !this.qdaily_loading
     },
     async show_toutiao () {
+      this.toutiao_xianshi = !this.toutiao_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('zonghe/toutiao', this.timeForm)
       this.toutiao = res.data
-      this.toutiao_xianshi = !this.toutiao_xianshi
+      this.toutiao_loading = !this.toutiao_loading
     },
     async show_guokr () {
-      this.timeForm.date = this.cur_time
-      const { data: res } = await this.$http.post('keji/guokr', this.timeForm)
-      this.guokr = res.data
       this.guokr_xianshi = !this.guokr_xianshi
+      this.timeForm.date = this.cur_time
+      const { data: res } = await this.$http.post('keji/kepuchina', this.timeForm)
+      this.guokr = res.data
+      this.kepuchina_loading = !this.kepuchina_loading
     },
     async show_36kr () {
+      this.kr36_xianshi = !this.kr36_xianshi
       this.timeForm.date = this.cur_time
       console.log(this.timeForm.date)
       const { data: res } = await this.$http.post('keji/kr36', this.timeForm)
       this.kr36 = res.data
-      this.kr36_xianshi = !this.kr36_xianshi
+      this.kr36_loading = !this.kr36_loading
     },
     async show_yc () {
+      this.yc_xianshi = !this.yc_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('keji/yc', this.timeForm)
       this.yc = res.data
-      this.yc_xianshi = !this.yc_xianshi
+      this.yc_loading = !this.yc_loading
     },
     async show_pengpai () {
+      this.pengpai_xianshi = !this.pengpai_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('shipin/pengpai', this.timeForm)
       this.pengpai = res.data
-      this.pengpai_xianshi = !this.pengpai_xianshi
+      this.pengpai_loading = !this.pengpai_loading
     },
     async show_pearvideo () {
+      this.pearvideo_xianshi = !this.pearvideo_xianshi
       this.timeForm.date = this.cur_time
       const { data: res } = await this.$http.post('shipin/pearvideo', this.timeForm)
       this.pearvideo = res.data
-      this.pearvideo_xianshi = !this.pearvideo_xianshi
+      this.pearvideo_loading = !this.pearvideo_loading
     },
     async show_bilibili () {
-      this.timeForm.date = this.cur_time
-      const { data: res } = await this.$http.post('shipin/bilibili', this.timeForm)
-      this.bilibili = res.data
+      // this.timeForm.date = this.cur_time
+      // const { data: res } = await this.$http.post('shipin/bilibili', this.timeForm)
+      // this.bilibili = res.data
       this.bilibili_xianshi = !this.bilibili_xianshi
     },
-    // async show_baidu () {
-    //   const { data: res } = await this.$http.get('zonghe/baidu')
-    //   this.baidu = res.hot.data
-    //   this.baidu_xianshi = !this.baidu_xianshi
-    // },
-    // async show_weibo () {
-    //   const { data: res } = await this.$http.get('zonghe/weibo')
-    //   this.weibo = res.data
-    //   this.weibo_xianshi = !this.weibo_xianshi
-    // },
-    // async show_zhihu () {
-    //   const { data: res } = await this.$http.get('zonghe/zhihu')
-    //   this.zhihu = res.hot.data
-    //   this.zhihu_xianshi = !this.zhihu_xianshi
-    // },
-    // async show_wangyi () {
-    //   const { data: res } = await this.$http.get('zonghe/wangyi')
-    //   this.wangyi = res.data
-    //   this.wangyi_xianshi = !this.wangyi_xianshi
-    // },
-    // async show_qdaily () {
-    //   const { data: res } = await this.$http.get('zonghe/qdaily')
-    //   this.qdaily = res.data
-    //   this.qdaily_xianshi = !this.qdaily_xianshi
-    // },
-    // async show_toutiao () {
-    //   const { data: res } = await this.$http.get('zonghe/toutiao')
-    //   this.toutiao = res.data
-    //   this.toutiao_xianshi = !this.toutiao_xianshi
-    // },
-    // async show_guokr () {
-    //   const { data: res } = await this.$http.get('keji/guokr')
-    //   this.guokr = res.data
-    //   this.guokr_xianshi = !this.guokr_xianshi
-    // },
-    // async show_36kr () {
-    //   const { data: res } = await this.$http.post('keji/kr36', this.cur_time)
-    //   this.kr36 = res.data
-    //   this.kr36_xianshi = !this.kr36_xianshi
-    // },
-    // async show_yc () {
-    //   const { data: res } = await this.$http.get('keji/yc')
-    //   this.yc = res.data
-    //   this.yc_xianshi = !this.yc_xianshi
-    // },
-    // async show_pengpai () {
-    //   const { data: res } = await this.$http.get('shipin/pengpai')
-    //   this.pengpai = res.data
-    //   this.pengpai_xianshi = !this.pengpai_xianshi
-    // },
-    // async show_pearvideo () {
-    //   const { data: res } = await this.$http.get('shipin/pearvideo')
-    //   this.pearvideo = res.data
-    //   this.pearvideo_xianshi = !this.pearvideo_xianshi
-    // },
-    // async show_bilibili () {
-    //   const { data: res } = await this.$http.get('shipin/bilibili')
-    //   this.bilibili = res.data
-    //   this.bilibili_xianshi = !this.bilibili_xianshi
-    // },
+    async show_recommend () {
+      this.bilibili_xianshi = !this.bilibili_xianshi
+      this.timeForm.date = this.cur_time
+      const { data: res } = await this.$http.post('combine/all', this.timeForm)
+      this.tuijian = res.data
+      this.tuijian_name = res.mostHot
+      this.tuijian_loading = !this.tuijian_loading
+    },
+    close_recommend () {
+      this.bilibili_xianshi = !this.bilibili_xianshi
+      this.tuijian_loading = !this.tuijian_loading
+    },
     goPage (url) {
       window.location.href = url
     }
@@ -861,7 +943,7 @@ export default {
   }
 
   .grid-content {
-    border-radius: 4px;
+    /*border-radius: 4px;*/
     width: 25%;
     height: 50px;
     background: #ffffff;
@@ -870,6 +952,10 @@ export default {
     justify-content: space-around;
     vertical-align: middle;
     cursor: pointer;
+    border: 1px solid #eee;
+    /*border-radius: 50%;*/
+    padding: 3px;
+    box-shadow: 0 0 10px #ddd;
   }
 
   .grid-content-hidden {
@@ -908,11 +994,11 @@ export default {
     display: flex;
     justify-content: center;
     box-sizing: border-box;
-    margin-top: 20px;
+    margin-top: 50px;
   }
 
   .showAll {
-    font-size: 15px;
+    font-size: .9rem;
     margin-left: 10px;
   }
 
@@ -930,6 +1016,10 @@ export default {
     width: 25%;
     height: 410px;
     background-color: #eeeeee;
+    border: 1px solid #eee;
+    /*border-radius: 50%;*/
+    padding: 1px;
+    box-shadow: 0 0 10px #ddd;
   }
 
   .tw-header {
@@ -985,7 +1075,7 @@ export default {
     /*align-items: center;*/
     width: 100%;
     font-size: .85rem;
-    padding-top: 10px;
+    padding-top: 13px;
   }
 
   .new {
@@ -1021,8 +1111,14 @@ export default {
     /*margin-right: 10px;*/
   }
 
-  .title{
+  .title {
     width: 65%;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .title1 {
+    width: 90%;
     text-align: left;
     cursor: pointer;
   }
@@ -1033,5 +1129,14 @@ export default {
     /*margin-right: 10px;*/
     text-align: center;
     float: right;
+    color: #999;
+  }
+
+  .new_tag {
+    background-color: #3db4f1;
+    font-size: 10px;
+    color: #fff;
+    padding: 0 2px;
+    margin-left: 4px;
   }
 </style>
