@@ -733,6 +733,12 @@ export default {
         this.wangyi_xianshi = true
         this.qdaily_xianshi = true
         this.toutiao_xianshi = true
+        this.baidu_loading = !this.baidu_loading
+        this.weibo_loading = !this.weibo_loading
+        this.zhihu_loading = !this.zhihu_loading
+        this.wangyi_loading = !this.wangyi_loading
+        this.qdaily_loading = !this.qdaily_loading
+        this.toutiao_loading = !this.toutiao_loading
       }
     },
     show_keji () {
@@ -755,6 +761,9 @@ export default {
         this.guokr_xianshi = true
         this.kr36_xianshi = true
         this.yc_xianshi = true
+        this.kepuchina_loading = !this.kepuchina_loading
+        this.kr36_loading = !this.kr36_loading
+        this.yc_loading = !this.yc_loading
       }
     },
     show_shipin () {
@@ -777,6 +786,9 @@ export default {
         this.pengpai_xianshi = true
         this.pearvideo_xianshi = true
         this.bilibili_xianshi = true
+        this.pengpai_loading = !this.pengpai_loading
+        this.pearvideo_loading = !this.pearvideo_loading
+        this.tuijian_loading = !this.tuijian_loading
       }
     },
     async show_baidu () {
