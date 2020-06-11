@@ -697,6 +697,19 @@ export default {
       this.pengpai_xianshi = true
       this.pearvideo_xianshi = true
       this.bilibili_xianshi = true
+
+      this.baidu_loading = true
+      this.weibo_loading = true
+      this.zhihu_loading = true
+      this.wangyi_loading = true
+      this.qdaily_loading = true
+      this.toutiao_loading = true
+      this.kepuchina_loading = true
+      this.kr36_loading = true
+      this.yc_loading = true
+      this.pengpai_loading = true
+      this.pearvideo_loading = true
+      this.tuijian_loading = true
     },
     show_zonghe () {
       if (this.zonghe_data === '展开分类') {
