@@ -194,7 +194,7 @@ public class CombinedNewsController {
 
 
         List<Map.Entry<String, Integer>> tokenValue = new ArrayList(Participle.entrySet());
-        Collections.sort(tokenValue, (o1, o2) -> {
+        tokenValue.sort((o1, o2) -> {
             if (o1.getValue().equals(o2.getValue())) {
                 return (o2.getKey().length() - o1.getKey().length());
 
@@ -207,8 +207,15 @@ public class CombinedNewsController {
     }
 
     private JSONObject createJsonResponse(List<ItemEntity> itemList, List<Map.Entry<String, Integer>> tokenValue) {
-        String MaxKey = tokenValue.get(0).getKey();
-        int MaxValue = tokenValue.get(0).getValue();
+        String MaxKey = null;
+        int MaxValue = 0;
+        try {
+            MaxKey = tokenValue.get(0).getKey();
+            MaxValue = tokenValue.get(0).getValue();
+        } catch (Exception e) {
+            MaxKey = null;
+        }
+
 
         JSONObject json = new JSONObject(true);
 
